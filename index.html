@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daniel Garnsey | Box Office Assistant</title>
+    <meta
+      name="description"
+      content="Daniel Garnsey box office assistant portfolio for guest services, donor relations, theatre operations, and event support."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f3efe9;
+        --bg-deep: #e9e0d3;
+        --paper: rgba(255, 255, 255, 0.64);
+        --panel: rgba(255, 255, 255, 0.74);
+        --line: rgba(18, 18, 18, 0.14);
+        --ink: #141413;
+        --muted: #5f5a55;
+        --light: #8a827d;
+        --emerald: #176b4d;
+        --emerald-deep: #0d4d3d;
+        --emerald-soft: rgba(23, 107, 77, 0.12);
+        --sage: #dfe9e0;
+        --gold: #d5c089;
+        --blue: #2f5b77;
+        --shadow: 0 22px 58px rgba(18, 18, 18, 0.09);
+        --shadow-strong: 0 28px 90px rgba(18, 18, 18, 0.12);
+        --radius: 28px;
+        --radius-sm: 18px;
+        --radius-xs: 12px;
+        --max: 1200px;
+        --header-height: 94px;
+      }
+
+      * { box-sizing: border-box; }
+
+      html {
+        scroll-behavior: smooth;
+        background: var(--bg);
+      }
+
+      body {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(23, 107, 77, 0.12), transparent 30%),
+          radial-gradient(circle at bottom right, rgba(50, 94, 116, 0.08), transparent 24%),
+          var(--bg);
+        overflow-x: hidden;
+      }
+
+      a { color: inherit; text-decoration: none; }
+      button, input, textarea { font: inherit; }
+
+      .page-shell {
+        position: relative;
+        min-height: 100vh;
+        isolation: isolate;
+        padding-bottom: 52px;
+      }
+
+      .background {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.95;
+      }
+
+      .bg-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(18, 18, 18, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(18, 18, 18, 0.035) 1px, transparent 1px);
+        background-size: 28px 28px;
+        mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.42), transparent 92%);
+      }
+
+      .shape {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: var(--size);
+        height: var(--size);
+        opacity: 0.12;
+        will-change: transform;
+        transform: translate3d(var(--tx), var(--ty), 0) rotate(var(--rot));
+        animation: drift 26s ease-in-out infinite alternate;
+        animation-delay: var(--delay);
+      }
+
+      .shape--square {
+        border: 1px solid rgba(20, 20, 19, 0.62);
+        background: linear-gradient(135deg, rgba(23, 107, 77, 0.08), rgba(255, 255, 255, 0.04));
+      }
+
+      .shape--triangle {
+        background: linear-gradient(135deg, rgba(23, 107, 77, 0.08), rgba(255,255,255,0.02));
+        clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+        border: 1px solid rgba(20, 20, 19, 0.5);
+      }
+
+      .shape--ring {
+        border: 1px solid rgba(20, 20, 19, 0.55);
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, rgba(23, 107, 77, 0.1), rgba(255,255,255,0));
+      }
+
+      .shape--bar {
+        border: 1px solid rgba(20, 20, 19, 0.55);
+        background: linear-gradient(90deg, rgba(23, 107, 77, 0.09), rgba(255,255,255,0.04));
+        border-radius: 999px;
+        height: 8px;
+      }
+
+      @keyframes drift {
+        0% {
+          transform: translate3d(var(--tx), var(--ty), 0) rotate(var(--rot));
+        }
+        50% {
+          transform: translate3d(calc(var(--tx) + 18px), calc(var(--ty) - 10px), 0) rotate(calc(var(--rot) + 18deg));
+        }
+        100% {
+          transform: translate3d(calc(var(--tx) - 18px), calc(var(--ty) + 16px), 0) rotate(calc(var(--rot) - 14deg));
+        }
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(243, 239, 233, 0.74);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border-bottom: 1px solid rgba(20, 20, 19, 0.12);
+      }
+
+      .header-inner {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 18px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        min-height: var(--header-height);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-shrink: 0;
+        min-width: 0;
+      }
+
+      .brand-mark {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        border: 1.5px solid rgba(20, 20, 19, 0.78);
+        background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(223,233,224,0.8));
+        box-shadow: 8px 8px 0 rgba(20,20,19,0.09);
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .brand:hover .brand-mark {
+        transform: translate(-2px, -2px);
+        box-shadow: 12px 12px 0 rgba(20,20,19,0.08);
+      }
+
+      .brand-mark svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .brand-copy {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.05;
+        min-width: 0;
+      }
+
+      .brand-copy strong {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.05rem;
+        letter-spacing: -0.08em;
+        text-transform: uppercase;
+      }
+
+      .brand-copy span {
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .main-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .nav-button,
+      .section-link,
+      .header-cta,
+      .submit-button {
+        appearance: none;
+        border: 1px solid rgba(20,20,19,0.18);
+        background: rgba(255,255,255,0.34);
+        color: var(--ink);
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      }
+
+      .nav-button,
+      .section-link {
+        padding: 10px 14px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      .nav-button:hover,
+      .nav-button:focus-visible,
+      .nav-button.is-active,
+      .section-link:hover,
+      .header-cta:hover,
+      .submit-button:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0 rgba(20,20,19,0.09);
+        border-color: rgba(20,20,19,0.7);
+        outline: none;
+      }
+
+      .nav-button:hover,
+      .nav-button:focus-visible,
+      .nav-button.is-active {
+        background: var(--ink);
+        color: #fff;
+      }
+
+      .header-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 18px;
+        border-color: rgba(20,20,19,0.8);
+        background: var(--ink);
+        color: #fff;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        flex-shrink: 0;
+      }
+
+      .header-cta:hover {
+        background: #fff;
+        color: var(--ink);
+      }
+
+      .content {
+        position: relative;
+        z-index: 1;
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 22px 22px 70px;
+      }
+
+      .page {
+        display: none;
+        animation: fadeInUp 0.5s ease-out;
+      }
+
+      .page.is-active {
+        display: block;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hero {
+        padding-top: 26px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.16fr 0.84fr;
+        gap: 22px;
+        align-items: stretch;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.02));
+        pointer-events: none;
+      }
+
+      .panel-inner {
+        position: relative;
+        z-index: 1;
+        padding: 30px 30px 28px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--emerald-deep);
+        margin-bottom: 18px;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 12px;
+        height: 12px;
+        border: 1px solid rgba(20,20,19,0.8);
+        background: linear-gradient(135deg, var(--emerald), rgba(255,255,255,0.1));
+        box-shadow: 4px 4px 0 rgba(20,20,19,0.08);
+        transform: rotate(45deg);
+        display: inline-block;
+      }
+
+      .headline {
+        margin: 0;
+        font-size: clamp(3.2rem, 8vw, 8rem);
+        line-height: 0.9;
+        letter-spacing: -0.09em;
+        font-family: "Syne", sans-serif;
+        text-transform: uppercase;
+        max-width: 760px;
+      }
+
+      .headline span {
+        display: block;
+      }
+
+      .headline .accent {
+        color: var(--emerald);
+        text-shadow: 6px 6px 0 rgba(20,20,19,0.06);
+      }
+
+      .lead {
+        margin-top: 18px;
+        max-width: 66ch;
+        font-size: 1.08rem;
+        line-height: 1.72;
+        color: var(--muted);
+      }
+
+      .lead strong {
+        color: var(--ink);
+      }
+
+      .quick-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 24px;
+      }
+
+      .metric {
+        background: rgba(255,255,255,0.42);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-sm);
+        padding: 16px 14px;
+        min-height: 108px;
+      }
+
+      .metric strong {
+        display: block;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+
+      .metric span {
+        display: block;
+        font-family: "Syne", sans-serif;
+        font-size: clamp(1.32rem, 2vw, 2.2rem);
+        line-height: 1.05;
+        letter-spacing: -0.06em;
+      }
+
+      .hero-side {
+        display: grid;
+        gap: 18px;
+      }
+
+      .mini-card {
+        background: rgba(255,255,255,0.42);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-sm);
+        padding: 18px 18px 16px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mini-card::after {
+        content: "";
+        position: absolute;
+        inset: -20% 28% auto auto;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(23, 107, 77, 0.12), transparent 70%);
+        pointer-events: none;
+      }
+
+      .mini-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .mini-label {
+        font-family: "Space Grotesk", sans-serif;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        color: var(--ink);
+      }
+
+      .pill {
+        display: inline-flex;
+        border: 1px solid rgba(18,18,18,0.22);
+        background: rgba(255,255,255,0.52);
+        padding: 6px 10px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.62rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border-radius: 999px;
+      }
+
+      .mini-body {
+        position: relative;
+        z-index: 1;
+        font-size: 0.98rem;
+        line-height: 1.7;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+
+      .mini-tags,
+      .project-stack,
+      .tags-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .tag {
+        border-radius: 999px;
+        border: 1px solid rgba(18,18,18,0.2);
+        background: rgba(255,255,255,0.45);
+        padding: 7px 10px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.62rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink);
+      }
+
+      .sparkline {
+        height: 42px;
+        margin-top: 12px;
+        border: 1px solid rgba(18,18,18,0.16);
+        background: rgba(255,255,255,0.28);
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .sparkline svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .section-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(20,20,19,0.14);
+      }
+
+      .section-link {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255,255,255,0.4);
+      }
+
+      .page-heading {
+        margin: 12px 0 18px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgba(20,20,19,0.14);
+      }
+
+      .page-heading h2 {
+        margin: 0;
+        font-family: "Syne", sans-serif;
+        font-size: clamp(2.2rem, 4vw, 4rem);
+        line-height: 0.98;
+        letter-spacing: -0.08em;
+        text-transform: uppercase;
+      }
+
+      .page-heading p {
+        margin-top: 10px;
+        max-width: 62ch;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: 1rem;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 18px;
+      }
+
+      .job {
+        background: rgba(255,255,255,0.46);
+        border: 1px solid rgba(20,20,19,0.16);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 22px 22px 18px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .job::before {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        top: -52px;
+        right: -28px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(23, 107, 77, 0.08), transparent 70%);
+      }
+
+      .job-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+      }
+
+      .job-title {
+        font-family: "Syne", sans-serif;
+        font-size: clamp(1.5rem, 2.2vw, 2.3rem);
+        letter-spacing: -0.06em;
+        line-height: 1.08;
+        margin: 0;
+      }
+
+      .job-time {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        align-self: center;
+        white-space: nowrap;
+      }
+
+      .job-body {
+        position: relative;
+        z-index: 1;
+        margin-top: 12px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .job-body p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: 1rem;
+      }
+
+      .job-body ul {
+        margin: 0;
+        padding-left: 0;
+        list-style: none;
+        display: grid;
+        gap: 10px;
+      }
+
+      .job-body li {
+        display: grid;
+        grid-template-columns: 14px 1fr;
+        gap: 10px;
+        align-items: start;
+        color: var(--ink);
+        font-size: 0.98rem;
+        line-height: 1.7;
+      }
+
+      .job-body li::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        background: var(--emerald);
+        border: 1px solid rgba(18,18,18,0.7);
+        transform: rotate(45deg);
+        margin-top: 8px;
+      }
+
+      .skill-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+      }
+
+      .skill-card {
+        padding: 24px;
+      }
+
+      .card-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(18,18,18,0.13);
+      }
+
+      .card-label strong {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink);
+      }
+
+      .card-label span {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .skill-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .skill-item {
+        border: 1px solid rgba(20,20,19,0.16);
+        background: rgba(255,255,255,0.42);
+        border-radius: var(--radius-sm);
+        padding: 16px;
+      }
+
+      .skill-item strong {
+        display: block;
+        font-family: "Syne", sans-serif;
+        font-size: 1.2rem;
+        letter-spacing: -0.05em;
+        margin-bottom: 8px;
+      }
+
+      .skill-item p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: 0.96rem;
+      }
+
+      .portfolio-layout {
+        display: grid;
+        grid-template-columns: 1.12fr 0.88fr;
+        gap: 22px;
+        align-items: start;
+      }
+
+      .showcase-list {
+        display: grid;
+        gap: 16px;
+      }
+
+      .showcase-item {
+        border: 1px solid rgba(18,18,18,0.18);
+        border-radius: var(--radius);
+        background: rgba(255,255,255,0.49);
+        padding: 18px 20px 16px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .showcase-item:hover {
+        transform: translate(-4px, -4px);
+        box-shadow: 10px 10px 0 rgba(20,20,19,0.08);
+      }
+
+      .showcase-item h3 {
+        margin: 0 0 8px;
+        font-family: "Syne", sans-serif;
+        font-size: 1.6rem;
+        letter-spacing: -0.06em;
+      }
+
+      .showcase-item p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.74;
+        font-size: 0.98rem;
+      }
+
+      .feature-block {
+        padding: 22px 20px 18px;
+        border: 1px solid rgba(20,20,19,0.16);
+        background: rgba(255,255,255,0.48);
+        border-radius: var(--radius);
+      }
+
+      .feature-block h3 {
+        margin: 0 0 10px;
+        font-family: "Syne", sans-serif;
+        font-size: 1.6rem;
+        letter-spacing: -0.06em;
+      }
+
+      .feature-block p {
+        margin: 0 0 12px;
+        color: var(--muted);
+        line-height: 1.75;
+        font-size: 0.96rem;
+      }
+
+      .contact-wrap {
+        display: grid;
+        grid-template-columns: 1.06fr 0.94fr;
+        gap: 22px;
+        align-items: start;
+      }
+
+      .contact-card {
+        padding: 28px 24px;
+      }
+
+      .contact-card h3 {
+        margin: 0 0 12px;
+        font-family: "Syne", sans-serif;
+        font-size: clamp(2.1rem, 4vw, 4rem);
+        line-height: 0.96;
+        letter-spacing: -0.08em;
+        text-transform: uppercase;
+      }
+
+      .contact-card p {
+        color: var(--muted);
+        line-height: 1.8;
+        margin: 0 0 18px;
+      }
+
+      .contact-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+      }
+
+      .contact-list li {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        gap: 8px;
+        border-bottom: 1px solid rgba(18,18,18,0.12);
+        padding-bottom: 10px;
+        color: var(--ink);
+        line-height: 1.6;
+      }
+
+      .contact-list strong {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .contact-form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        padding: 24px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .field.full {
+        grid-column: 1 / -1;
+      }
+
+      .field label {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.67rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .field input,
+      .field textarea {
+        width: 100%;
+        border: 1px solid rgba(20,20,19,0.22);
+        background: rgba(255,255,255,0.72);
+        padding: 14px 12px;
+        color: var(--ink);
+        border-radius: 12px;
+        resize: vertical;
+      }
+
+      .field textarea {
+        min-height: 160px;
+      }
+
+      .field input:focus,
+      .field textarea:focus {
+        outline: 2px solid rgba(23,107,77,0.22);
+        border-color: rgba(23,107,77,0.72);
+      }
+
+      .submit-row {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+        margin-top: 2px;
+      }
+
+      .submit-button {
+        border: 1px solid rgba(20,20,19,0.8);
+        background: var(--ink);
+        color: #fff;
+        padding: 14px 18px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .submit-button:hover {
+        background: #fff;
+        color: var(--ink);
+      }
+
+      .form-status {
+        min-height: 18px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.66rem;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .form-status.success { color: var(--emerald-deep); }
+      .form-status.error { color: #7d2d2d; }
+
+      .site-footer {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 30;
+        text-align: center;
+        padding: 12px 18px 14px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(20, 20, 19, 0.78);
+        background: rgba(243,239,233,0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-top: 1px solid rgba(20,20,19,0.1);
+      }
+
+      @media (max-width: 980px) {
+        .header-inner {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .hero-grid,
+        .portfolio-layout,
+        .contact-wrap,
+        .skill-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .main-nav {
+          order: 2;
+          width: 100%;
+        }
+
+        .header-cta {
+          order: 3;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .content {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+
+        .header-inner {
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+
+        .brand-copy span {
+          letter-spacing: 0.08em;
+        }
+
+        .main-nav {
+          justify-content: flex-start;
+          overflow-x: auto;
+          padding-bottom: 4px;
+        }
+
+        .quick-metrics,
+        .contact-form {
+          grid-template-columns: 1fr;
+        }
+
+        .section-link,
+        .nav-button {
+          white-space: nowrap;
+        }
+
+        .headline {
+          font-size: clamp(2.6rem, 18vw, 5rem);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="background" aria-hidden="true">
+        <div class="bg-grid"></div>
+        <div id="bgShapes"></div>
+      </div>
+
+      <header class="site-header">
+        <div class="header-inner">
+          <a href="#home" class="brand nav-link" data-page="home" aria-label="Go to home page">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 160 160" role="img" aria-label="Daniel Garnsey logo mark">
+                <rect x="12" y="12" width="136" height="136" rx="26" fill="#F6F1EA" stroke="#141413" stroke-width="3"/>
+                <path d="M48 46v68c0 12.7 10.3 23 23 23h16c26.5 0 43-18.2 43-42.5S103.5 46 77 46H48zm25 20h12c14.4 0 24 9.7 24 22.5S89.4 111 75 111H73V66h0z" fill="#176B4D"/>
+                <path d="M66 47c0 0 19-13 33 0" fill="none" stroke="#141413" stroke-width="5" stroke-linecap="round"/>
+                <path d="M96 102c15.8-5.5 27-19.6 27-36.4 0-22.4-18.3-40.6-40.8-40.6" fill="none" stroke="#141413" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 12" opacity="0.75"/>
+                <path d="M100 112c-13.2-6.1-18.1-20.4-18.1-34.6 0-14 7.2-27.2 24.6-30.5" fill="none" stroke="#141413" stroke-width="4.5" stroke-linecap="round" opacity="0.72"/>
+                <path d="M33 119c16-18 42-20 56-20" fill="none" stroke="#D5C089" stroke-width="5" stroke-linecap="round" opacity="0.82"/>
+                <path d="M112 36c7.7 0 14 6.3 14 14 0 7.7-6.3 14-14 14s-14-6.3-14-14c0-7.7 6.3-14 14-14z" fill="#141413" opacity="0.12"/>
+              </svg>
+            </span>
+            <span class="brand-copy">
+              <strong>Daniel Garnsey</strong>
+              <span>Box office • guest services</span>
+            </span>
+          </a>
+
+          <nav class="main-nav" aria-label="Main navigation">
+            <button class="nav-button is-active" type="button" data-page="home">Home</button>
+            <button class="nav-button" type="button" data-page="experience">Experience</button>
+            <button class="nav-button" type="button" data-page="skills">Skills</button>
+            <button class="nav-button" type="button" data-page="portfolio">Projects</button>
+            <button class="nav-button" type="button" data-page="contact">Contact</button>
+          </nav>
+
+          <a class="header-cta" href="#contact">Let’s talk</a>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="page is-active" id="home" data-page-section="home">
+          <div class="hero">
+            <div class="hero-grid">
+              <div class="panel">
+                <div class="panel-inner">
+                  <div class="eyebrow">Available for evenings & weekends</div>
+                  <h1 class="headline">
+                    <span>Daniel</span>
+                    <span class="accent">Garnsey</span>
+                  </h1>
+
+                  <p class="lead">
+                    I care deeply about guest experience, and I make sure every patron feels welcomed, informed, and genuinely taken care of. I am always ready to greet guests with a smile, provide helpful service, and do whatever I can to make the experience smooth, warm, and memorable.
+                    <strong>I bring calm professionalism, practical hospitality, and dependable support to busy public-facing environments.</strong>
+                  </p>
+
+                  <div class="quick-metrics">
+                    <div class="metric">
+                      <strong>Guest service</strong>
+                      <span>500+ patrons</span>
+                    </div>
+                    <div class="metric">
+                      <strong>Revenue</strong>
+                      <span>$1,336</span>
+                    </div>
+                    <div class="metric">
+                      <strong>Inventory</strong>
+                      <span>80+ props</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hero-side">
+                <div class="mini-card">
+                  <div class="mini-top">
+                    <div class="mini-label">What I do</div>
+                    <span class="pill">Guest-ready</span>
+                  </div>
+                  <div class="mini-body">
+                    I create warm, well-organized front-of-house experiences by blending hospitality, accuracy, and clear communication in high-energy spaces.
+                  </div>
+                  <div class="mini-tags">
+                    <span class="tag">Box office</span>
+                    <span class="tag">Sales</span>
+                    <span class="tag">Guest support</span>
+                  </div>
+                  <div class="sparkline" aria-hidden="true">
+                    <svg viewBox="0 0 320 42" preserveAspectRatio="none">
+                      <path d="M0,28 C34,26 54,18 72,22 C102,30 114,10 146,14 C176,18 196,30 224,20 C254,10 280,16 320,8" fill="none" stroke="#176B4D" stroke-width="3" stroke-linecap="round"/>
+                      <path d="M0,32 C32,34 54,24 76,26 C108,30 128,20 152,18 C192,15 212,26 240,24 C268,22 290,18 320,16" fill="none" stroke="#2f5b77" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="mini-card">
+                  <div class="mini-top">
+                    <div class="mini-label">Specialty</div>
+                    <span class="pill">Fast-paced</span>
+                  </div>
+                  <div class="mini-body">
+                    From POS transactions and cash balancing to event setup and volunteer support, I work best where hospitality, detail, and guest care must happen at once.
+                  </div>
+                  <div class="mini-tags">
+                    <span class="tag">POS</span>
+                    <span class="tag">Cash handling</span>
+                    <span class="tag">Merchandise</span>
+                  </div>
+                </div>
+
+                <div class="mini-card">
+                  <div class="mini-top">
+                    <div class="mini-label">Core strengths</div>
+                    <span class="pill">Accuracy</span>
+                  </div>
+                  <div class="mini-body">
+                    Verified totals, organized inventory, thoughtful guidance, and dependable support when the room is full and the pace is moving quickly.
+                  </div>
+                  <div class="mini-tags">
+                    <span class="tag">Checklists</span>
+                    <span class="tag">Tracking</span>
+                    <span class="tag">Hospitality</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-nav" aria-label="Quick section links">
+              <a class="section-link nav-link" href="#experience" data-page="experience">Experience</a>
+              <a class="section-link nav-link" href="#skills" data-page="skills">Skills</a>
+              <a class="section-link nav-link" href="#portfolio" data-page="portfolio">Projects</a>
+              <a class="section-link nav-link" href="#contact" data-page="contact">Contact</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="experience" data-page-section="experience">
+          <div class="page-heading">
+            <h2>Experience</h2>
+            <p>
+              My work has centered on public-facing service, donor interaction, and event operations that keep guests informed, supported, and cared for from arrival to exit.
+            </p>
+          </div>
+
+          <div class="timeline">
+            <article class="job">
+              <div class="job-top">
+                <h3 class="job-title">Fundraising & Event Operations</h3>
+                <span class="job-time">2025–2026</span>
+              </div>
+              <div class="job-body">
+                <p>
+                  Supported development and hospitality operations through donor-facing communication, guest coordination, and warm service in high-touch fundraising environments.
+                </p>
+                <ul>
+                  <li>Prepared and quality-checked 30+ personalized donor mailings with correct names, addresses, postage, and presentation.</li>
+                  <li>Provided VIP hospitality, silent-auction support, donor communications, guest transportation, and setup coordination for a major community event.</li>
+                  <li>Created donor-sharing photo collages in Canva from rehearsal photography for partner organizations.</li>
+                  <li>Supported supply movement, room readiness, and welcoming guest experiences before and during events.</li>
+                </ul>
+                <div class="tags-wrap">
+                  <span class="tag">Donor relations</span>
+                  <span class="tag">VIP service</span>
+                  <span class="tag">Event setup</span>
+                  <span class="tag">Guest logistics</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="job">
+              <div class="job-top">
+                <h3 class="job-title">Box Office & Merchandise Sales</h3>
+                <span class="job-time">August 2026</span>
+              </div>
+              <div class="job-body">
+                <p>
+                  Operated a guest-facing sales environment where accuracy, speed, and warmth mattered equally.
+                </p>
+                <ul>
+                  <li>Generated $1,336 in merchandise sales in under two hours at a community event with nearly 500 attendees.</li>
+                  <li>Processed cash and card transactions, verified totals, and balanced cash bags accurately.</li>
+                  <li>Trained incoming volunteers on merchandise procedures, Square POS use, and customer service standards.</li>
+                  <li>Helped patrons make purchase decisions quickly while maintaining a friendly, organized experience.</li>
+                </ul>
+                <div class="tags-wrap">
+                  <span class="tag">Square POS</span>
+                  <span class="tag">Merchandise sales</span>
+                  <span class="tag">Cash handling</span>
+                  <span class="tag">Volunteer training</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="job">
+              <div class="job-top">
+                <h3 class="job-title">Concessions, Inventory & Front-of-House Support</h3>
+                <span class="job-time">2025–Present</span>
+              </div>
+              <div class="job-body">
+                <p>
+                  Maintained accurate inventory, supported smooth guest flow, and helped keep service areas ready for every show.
+                </p>
+                <ul>
+                  <li>Created a category-based Google Sheets concessions inventory tracker to improve count accuracy and restocking coordination.</li>
+                  <li>Completed pre-show inventory checks and organized stock for quick, consistent service.</li>
+                  <li>Operated POS during pre-show and intermission periods while greeting patrons and answering questions.</li>
+                  <li>Ushered and distributed playbills to help guests find seats and receive clear event guidance.</li>
+                </ul>
+                <div class="tags-wrap">
+                  <span class="tag">Google Sheets</span>
+                  <span class="tag">Inventory tracking</span>
+                  <span class="tag">Front-of-house</span>
+                  <span class="tag">Guest support</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="job">
+              <div class="job-top">
+                <h3 class="job-title">Assistant Stage Management & Props Design</h3>
+                <span class="job-time">June–July 2026</span>
+              </div>
+              <div class="job-body">
+                <p>
+                  Supported stage-left operations with organized prop tables, tracking tools, and rehearsal-ready communication.
+                </p>
+                <ul>
+                  <li>Managed stage-left operations and built labeled prop tables for quick performance access.</li>
+                  <li>Created an 80+ item Google Sheets props tracker with source, actor assignment, scene, and preset location details.</li>
+                  <li>Supported prop distribution by scene and performer, coordinating with rehearsal notes and strike completion.</li>
+                </ul>
+                <div class="tags-wrap">
+                  <span class="tag">Props tracking</span>
+                  <span class="tag">Scene support</span>
+                  <span class="tag">Rehearsal flow</span>
+                  <span class="tag">Operations</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="job">
+              <div class="job-top">
+                <h3 class="job-title">Youth Program Grant & Conductor Support</h3>
+                <span class="job-time">March 2026</span>
+              </div>
+              <div class="job-body">
+                <p>
+                  Secured funding for youth program support and contributed to rehearsal and performance operations in a vocal setting.
+                </p>
+                <ul>
+                  <li>Researched and secured a competitive $1,580 community grant to fully fund a youth production budget.</li>
+                  <li>Conducted to accompaniment tracks during rehearsals and performances, providing coaching through notes.</li>
+                  <li>Supported vocal instruction, staging, and rehearsal flow in collaboration with creative leadership.</li>
+                </ul>
+                <div class="tags-wrap">
+                  <span class="tag">Grant writing</span>
+                  <span class="tag">Conducting</span>
+                  <span class="tag">Team support</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" id="skills" data-page-section="skills">
+          <div class="page-heading">
+            <h2>Skills</h2>
+            <p>
+              A practical toolkit built for guest services, event operations, and theatre support—strong in execution, detail-tracking, and communication under pressure.
+            </p>
+          </div>
+
+          <div class="skill-grid">
+            <article class="panel skill-card">
+              <div class="card-label">
+                <strong>Operational strengths</strong>
+                <span>Front-of-house focus</span>
+              </div>
+
+              <div class="skill-list">
+                <div class="skill-item">
+                  <strong>Guest service</strong>
+                  <p>Warm, professional communication that keeps lines moving smoothly and guests feeling welcomed, informed, and cared for.</p>
+                </div>
+                <div class="skill-item">
+                  <strong>Cash handling & POS</strong>
+                  <p>Fast, accurate transaction processing with careful balancing and change verification in busy environments.</p>
+                </div>
+                <div class="skill-item">
+                  <strong>Inventory tracking</strong>
+                  <p>Category-based organization, counts, and restock planning that support quick service and better guest readiness.</p>
+                </div>
+                <div class="skill-item">
+                  <strong>Volunteer coordination</strong>
+                  <p>Training new helpers on procedures, service expectations, and operational flow so teams stay aligned.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel skill-card">
+              <div class="card-label">
+                <strong>Tools & platform experience</strong>
+                <span>Digital + physical</span>
+              </div>
+
+              <div class="skill-list">
+                <div class="skill-item">
+                  <strong>Google Workspace</strong>
+                  <p>Google Sheets, organized records, tracking systems, and clear documentation for event and theatre operations.</p>
+                </div>
+                <div class="skill-item">
+                  <strong>Canva</strong>
+                  <p>Design support for donor-facing visuals, event graphics, and polished presentation-ready material.</p>
+                </div>
+                <div class="skill-item">
+                  <strong>PatronManager</strong>
+                  <p>Guest and donor-facing records, communication support, and data accuracy in front-of-house workflows.</p>
+                </div>
+                <div class="skill-item">
+                  <strong>Theatre operations</strong>
+                  <p>Props management, deck crew support, followspot work, curtain operations, and stage-left coordination.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" id="portfolio" data-page-section="portfolio">
+          <div class="page-heading">
+            <h2>Projects & systems</h2>
+            <p>
+              I enjoy building simple systems that reduce stress and make busy environments feel organized, consistent, and easy for guests to navigate.
+            </p>
+          </div>
+
+          <div class="portfolio-layout">
+            <div class="showcase-list">
+              <article class="showcase-item">
+                <h3>Props Table Label Standard</h3>
+                <p>
+                  A label system for quick access and consistent return: what the prop is, what scene it serves, and where it belongs.
+                </p>
+                <div class="project-stack">
+                  <span class="tag">Operations</span>
+                  <span class="tag">Stage support</span>
+                  <span class="tag">Efficiency</span>
+                </div>
+              </article>
+
+              <article class="showcase-item">
+                <h3>Concessions Inventory Tracker</h3>
+                <p>
+                  A category-based spreadsheet built to help track counts, identify shortages, and organize restocking before a show.
+                </p>
+                <div class="project-stack">
+                  <span class="tag">Google Sheets</span>
+                  <span class="tag">Inventory</span>
+                  <span class="tag">Restock logic</span>
+                </div>
+              </article>
+
+              <article class="showcase-item">
+                <h3>Donor Thank-You Template System</h3>
+                <p>
+                  A repeatable donor communication structure for acknowledging support clearly, warmly, and professionally without losing detail.
+                </p>
+                <div class="project-stack">
+                  <span class="tag">Donor care</span>
+                  <span class="tag">Communication</span>
+                  <span class="tag">Accuracy</span>
+                </div>
+              </article>
+
+              <article class="showcase-item">
+                <h3>Front-of-House Volunteer Notes</h3>
+                <p>
+                  A practical instruction set covering POS basics, guest service standards, and common edge-case scenarios for volunteers.
+                </p>
+                <div class="project-stack">
+                  <span class="tag">Training</span>
+                  <span class="tag">Service</span>
+                  <span class="tag">Operations</span>
+                </div>
+              </article>
+            </div>
+
+            <aside class="feature-block">
+              <h3>Why it matters</h3>
+              <p>
+                I do my best work where the details matter most: customer flow, accurate financial handling, smooth transitions, and dependable communication across teams.
+              </p>
+              <p>
+                I am especially effective when an operation needs someone who can stay organized, stay calm, and stay personable while the room is active and the guest experience is at its peak.
+              </p>
+
+              <div class="project-stack">
+                <span class="tag">Accuracy</span>
+                <span class="tag">Warm service</span>
+                <span class="tag">Clear systems</span>
+                <span class="tag">Dependability</span>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page" id="contact" data-page-section="contact">
+          <div class="page-heading">
+            <h2>Contact</h2>
+            <p>
+              I’m looking for opportunities where guest experience, event operations, and careful execution matter as much as hospitality.
+            </p>
+          </div>
+
+          <div class="contact-wrap">
+            <div class="panel contact-card">
+              <h3>Let’s make the room run smoothly.</h3>
+              <p>
+                If you’re hiring for a box office assistant, front-of-house role, event support position, or theatre operations role, I’d welcome the chance to connect.
+              </p>
+
+              <ul class="contact-list">
+                <li><strong>Phone</strong><span>(517) 291-9741</span></li>
+                <li><strong>Email</strong><span>danielgarnsey@miprepschool.org</span></li>
+                <li><strong>Location</strong><span>Adrian, MI</span></li>
+                <li><strong>Availability</strong><span>Evenings, weekends, school breaks, and select daytime hours</span></li>
+              </ul>
+            </div>
+
+            <div class="panel">
+              <form class="contact-form" id="contactForm">
+                <div class="field">
+                  <label for="firstName">First name</label>
+                  <input id="firstName" name="firstName" type="text" required />
+                </div>
+
+                <div class="field">
+                  <label for="lastName">Last name</label>
+                  <input id="lastName" name="lastName" type="text" required />
+                </div>
+
+                <div class="field full">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" required />
+                </div>
+
+                <div class="field full">
+                  <label for="subject">Subject</label>
+                  <input id="subject" name="subject" type="text" placeholder="e.g. Box office assistant opportunity" required />
+                </div>
+
+                <div class="field full">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" required placeholder="Tell me about the position, the event, or the team."></textarea>
+                </div>
+
+                <div class="submit-row">
+                  <button class="submit-button" type="submit">Send inquiry</button>
+                  <span class="form-status" id="formStatus" aria-live="polite"></span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="site-footer">© 2026 Daniel Garnsey</footer>
+
+    <script>
+      const bgShapes = document.getElementById("bgShapes");
+      const shapeCount = 12;
+      const classes = ["shape", "shape--square", "shape--triangle", "shape--ring", "shape--bar"];
+
+      for (let i = 0; i < shapeCount; i++) {
+        const shape = document.createElement("div");
+        const className = classes[i % classes.length];
+        shape.className = className;
+
+        const size = 70 + (i % 6) * 28;
+        const x = 4 + Math.random() * 92;
+        const y = 8 + Math.random() * 80;
+        const rot = Math.random() * 360;
+        const delay = (Math.random() * 14).toFixed(2);
+
+        shape.style.setProperty("--size", `${size}px`);
+        shape.style.setProperty("--tx", `${x}%`);
+        shape.style.setProperty("--ty", `${y}%`);
+        shape.style.setProperty("--rot", `${rot}deg`);
+        shape.style.setProperty("--delay", `${delay}s`);
+        shape.style.opacity = (0.05 + Math.random() * 0.12).toFixed(2);
+        bgShapes.appendChild(shape);
+      }
+
+      const navButtons = document.querySelectorAll("[data-page]");
+      const pages = document.querySelectorAll("[data-page-section]");
+
+      function setPage(pageName) {
+        pages.forEach((page) => {
+          page.classList.toggle("is-active", page.dataset.pageSection === pageName);
+        });
+
+        navButtons.forEach((button) => {
+          const active = button.dataset.page === pageName;
+          button.classList.toggle("is-active", active);
+        });
+
+        const pageId = pageName === "home" ? "#home" : `#${pageName}`;
+        history.replaceState(null, "", pageId);
+      }
+
+      navButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+          const pageName = button.dataset.page;
+          if (button.tagName.toLowerCase() === "a") {
+            event.preventDefault();
+          }
+          setPage(pageName);
+        });
+      });
+
+      window.addEventListener("hashchange", () => {
+        const hash = window.location.hash.replace("#", "");
+        if (hash && [...pages].some((p) => p.id === hash)) {
+          setPage(hash);
+        } else if (!hash) {
+          setPage("home");
+        }
+      });
+
+      const contactForm = document.getElementById("contactForm");
+      const formStatus = document.getElementById("formStatus");
+
+      contactForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const firstName = document.getElementById("firstName").value.trim();
+        const lastName = document.getElementById("lastName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const subject = document.getElementById("subject").value.trim();
+        const message = document.getElementById("message").value.trim();
+
+        if (!firstName || !lastName || !email || !subject || !message) {
+          formStatus.textContent = "Please complete all required fields.";
+          formStatus.className = "form-status error";
+          return;
+        }
+
+        formStatus.textContent = "Message queued successfully.";
+        formStatus.className = "form-status success";
+        contactForm.reset();
+      });
+
+      const initialHash = window.location.hash.replace("#", "");
+      if (initialHash && [...pages].some((p) => p.id === initialHash)) {
+        setPage(initialHash);
+      } else {
+        setPage("home");
+      }
+    </script>
+  </body>
+</html>
